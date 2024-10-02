@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAU Course Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add your CSS here (from your previous code) */
+    </style>
+</head>
+<body>
+
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+
+    <!-- Button to toggle the visibility of the sidebar -->
+    <button id="toggle-btn">☰</button>
+
+    <!-- Sidebar containing course modules and topics -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Course Modules</h2>
+        </div>
+        <ul class="module-list">
+            <li class="module-item">
+                <div class="module-title" data-course="technical" data-module="Introduction">Introduction</div>
+                <ul class="topic-list">
+                    <li class="topic-item" data-course="technical" data-module="Introduction" data-topic="topic1-1">Topic 1.1: Overview</li>
+                    <li class="topic-item" data-course="technical" data-module="Introduction" data-topic="topic1-2">Topic 1.2: Getting Started</li>
+                </ul>
+            </li>
+            <!-- Add more modules as needed -->
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content" id="main-content">
+        <h1 id="course-title">Loading...</h1>
+        <p>Welcome to the course page. Here, you will find all the course modules and topics.</p>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 New Age University</p>
+    </footer>
+
+    <!-- Add your JS for dynamic loading and course title -->
+    <script>
+        // Function to load external HTML content into an element
+        function loadHTML(selector, url) {
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector(selector).innerHTML = data;
+                })
+                .catch(error => console.error('Error loading HTML:', error));
+        }
+
+        // Function to extract the courseId from the URL parameters
+        function getCourseIdFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('courseId'); // Get 'courseId' from URL
+        }
+
+        // Function to set the course title based on the courseId
+        function setCourseTitle(courseId) {
+            const courseTitleElement = document.getElementById('course-title');
+            let courseTitle = '';
+
+            switch(courseId) {
+                case 'technical':
+                    courseTitle = 'Technical Writing Course';
+                    break;
+                case 'webdev':
+                    courseTitle = 'Web Development Course';
+                    break;
+                case 'datasci':
+                    courseTitle = 'Data Science Course';
+                    break;
+                default:
+                    courseTitle = 'New Age University Courses';
+            }
+
+            courseTitleElement.textContent = courseTitle;
+        }
+
+        // Load the header HTML content dynamically
+        loadHTML('#header-placeholder', 'header.html');
+
+        // Get the courseId from the URL and set the course title
+        const courseId = getCourseIdFromURL();
+        setCourseTitle(courseId);
+    </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Age University - A New Way of Learning</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        /* Custom styles for the header */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #f8f9fa; /* Light background */
+        }
+        .course-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div id="header"></div>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <h2>Welcome to New Age University</h2>
+        <p>This is your course learning platform.</p>
+    </div>
+
+    <!-- Notification Modal (for when you click the notification icon) -->
+    <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="notificationList">
+                        <!-- Notifications will be dynamically added here -->
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+        // Function to load HTML content into the header dynamically
+        function loadHTML(selector, url) {
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    document.querySelector(selector).innerHTML = html;
+                    initializeHeader(); // Initialize functionality once HTML is loaded
+                })
+                .catch(error => console.error('Error loading HTML:', error));
+        }
+
+        // Function to get a URL query parameter
+        function getQueryParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Function to initialize the header once it's loaded
+        function initializeHeader() {
+            const courseId = getQueryParameter('courseId');
+            const courseTitleElement = document.getElementById('courseTitle');
+
+            if (courseId) {
+                // Set the course title based on the courseId
+                const courseTitles = {
+                    1: 'Web Development Course',
+                    2: 'Data Science Bootcamp',
+                    3: 'Artificial Intelligence Fundamentals',
+                    // Add more course titles as needed
+                };
+
+                courseTitleElement.textContent = courseTitles[courseId] || 'Default Course Title';
+            }
+
+            // Notification system
+            const notificationIcon = document.querySelector('.notification-icon');
+            const notificationBadge = document.getElementById('notificationBadge');
+            const notificationList = document.getElementById('notificationList');
+
+            notificationIcon.addEventListener('click', function() {
+                const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+                notificationModal.show();
+            });
+
+            // Example: Dynamically add a notification
+            function addNotification(message) {
+                const notificationCount = notificationList.children.length + 1;
+                const listItem = document.createElement('li');
+                listItem.textContent = message;
+                notificationList.appendChild(listItem);
+
+                // Update the notification badge
+                notificationBadge.textContent = notificationCount;
+                notificationBadge.style.display = 'inline';
+            }
+
+            // Example to remove notifications once checked
+            function clearNotifications() {
+                notificationList.innerHTML = '';
+                notificationBadge.style.display = 'none';
+            }
+
+            // Add a few notifications for demo purposes
+            addNotification("New assignment uploaded.");
+            addNotification("Course deadline extended.");
+        }
+
+        // Load the header on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            loadHTML('#header', 'components/header.html?courseId=1');
+        });
+    </script>
+
+</body>
+</html>
